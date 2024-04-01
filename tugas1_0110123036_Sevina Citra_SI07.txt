@@ -1,0 +1,738 @@
+BASIS DATA 
+
+C:\Users\sevin>cd\
+
+C:\>cd xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 9
+Server version: 10.4.28-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| dbpegawai          |
+| dbsi07             |
+| dbtesting          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.002 sec)
+
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment not null,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.017 sec)
+
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment not null,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.033 sec)
+
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.018 sec)
+
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id INT PRIMARY KEY AUTO_INCREMENT,
+    -> nip CHAR(5) NOT NULL UNIQUE,
+    -> nama VARCHAR(30) NOT NULL,
+    -> gender ENUM ('Laki-Laki','Perempuan') NOT NULL,
+    -> tmp_lahir VARCHAR(30) NOT NULL,
+    -> tgl_lahir DATE NOT NULL,
+    -> iddivisi INT NOT NULL,
+    -> idjabatan INT NOT NULL,
+    -> alamat TEXT,
+    -> FOREIGN KEY (iddivisi) REFERENCES divisi(id),
+    -> FOREIGN KEY (idjabatan) REFERENCES jabatan(id));
+Query OK, 0 rows affected (0.030 sec)
+
+MariaDB [dbpegawai]> DESC pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   | MUL | NULL    |                |
+| idjabatan | int(11)                       | NO   | MUL | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.014 sec)
+
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES
+    -> ('SDM'),
+    -> ('Keuangan'),
+    -> ('Marketing'),
+    -> ('IT');
+Query OK, 4 rows affected (0.039 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES
+    -> ('Direktur'),
+    -> ('Manajer'),
+    -> ('Asisten Manajer'),
+    -> ('Staff');
+Query OK, 4 rows affected (0.006 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  4 | Staff           |
++----+-----------------+
+4 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES
+    -> ('13245', 'Sevina Citra', 'Perempuan', 'Jakarta', '2005-04-16',4, 1, 'Jl. Langgar 42'),
+    -> ('24531', 'Rasya Pratama', 'Laki-Laki', 'Tangerang', '2003-10-25',4, 1, 'Jl. Merpati'),
+    -> ('12453', 'Kyessy Agustin', 'Perempuan', 'Bandung', '2002-12-09',4, 1, 'Jl. Elang 3'),
+    -> ('45231', 'Arsya Ramadhan', 'Laki-Laki', 'Jakarta', '2003-03-15',4, 1, 'Jl. Elang Mas'),
+    -> ('35214', 'Naufal Wijaya', 'Laki-Laki', 'Depok', '2003-02-20',4, 1, 'Jl. Melati'),
+    -> ('68541', 'Ryaufi Velis', 'Perempuan', 'Bandung', '2002-12-09',3, 2, 'Jl. Mawar 3'),
+    -> ('75462', 'Fadlan Fahdhi', 'Laki-Laki', 'Jakarta', '2002-02-02',3, 1, 'Jl. Flamboyan'),
+    -> ('65421', 'Rajash Bimantara', 'Laki-Laki', 'Depok', '2001-02-11',3, 3, 'Jl. Meruya'),
+    -> ('42675', 'Rea Rachel', 'Perempuan', 'Tangerang', '2004-05-06',3, 4, 'Jl. Poltangan'),
+    -> ('56438', 'Vivian Xaviera', 'Perempuan', 'Jakarta', '2005-01-08',3, 2, 'Jl. Tulip'),
+    -> ('25634', 'Anantha Levania', 'Perempuan', 'Depok', '2002-09-07',2, 2, 'Jl. Peony'),
+    -> ('17542', 'Ryan Baskara', 'Laki-Laki', 'Tangerang', '2000-01-10',2, 3, 'Jl. Garuda'),
+    -> ('14721', 'Ezra Shankara', 'Laki-Laki', 'Bandung', '2001-04-04',2, 4, 'Jl. Cendrawasih'),
+    -> ('28345', 'Lyora Tamara', 'Perempuan', 'Depok', '2001-12-23',2, 4, 'Jl. Jalak 12'),
+    -> ('63459', 'Jessi Zamora', 'Perempuan', 'Jakarta', '2002-06-18',2, 1, 'Jl. Iris 1'),
+    -> ('20212', 'Rafa Aksara', 'Laki-Laki', 'Tangerang', '2003-10-21',1, 2, 'Jl. Canna'),
+    -> ('11217', 'Gracia Tifany', 'Perempuan', 'Bandung', '2002-04-19',1, 3, 'Jl. Ceri 2'),
+    -> ('72231', 'Starla Vanesya', 'Perempuan', 'Jakarta', '2001-05-25',1, 2, 'Jl. Ceria'),
+    -> ('49573', 'Areksa Radika', 'Laki-Laki', 'Depok', '2003-07-03',1, 4, 'Jl. Dahlia'),
+    -> ('14149', 'Vyora Aletta', 'Perempuan', 'Jakarta', '2000-08-01',1, 3, 'Jl. Aster 6');
+Query OK, 20 rows affected (0.011 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+------------------+-----------+-----------+------------+----------+-----------+-----------------+
+| id | nip   | nama             | gender    | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-------+------------------+-----------+-----------+------------+----------+-----------+-----------------+
+|  1 | 13245 | Sevina Citra     | Perempuan | Jakarta   | 2005-04-16 |        4 |         1 | Jl. Langgar 42  |
+|  2 | 24531 | Rasya Pratama    | Laki-Laki | Tangerang | 2003-10-25 |        4 |         1 | Jl. Merpati     |
+|  3 | 12453 | Kyessy Agustin   | Perempuan | Bandung   | 2002-12-09 |        4 |         1 | Jl. Elang 3     |
+|  4 | 45231 | Arsya Ramadhan   | Laki-Laki | Jakarta   | 2003-03-15 |        4 |         1 | Jl. Elang Mas   |
+|  5 | 35214 | Naufal Wijaya    | Laki-Laki | Depok     | 2003-02-20 |        4 |         1 | Jl. Melati      |
+|  6 | 68541 | Ryaufi Velis     | Perempuan | Bandung   | 2002-12-09 |        3 |         2 | Jl. Mawar 3     |
+|  7 | 75462 | Fadlan Fahdhi    | Laki-Laki | Jakarta   | 2002-02-02 |        3 |         1 | Jl. Flamboyan   |
+|  8 | 65421 | Rajash Bimantara | Laki-Laki | Depok     | 2001-02-11 |        3 |         3 | Jl. Meruya      |
+|  9 | 42675 | Rea Rachel       | Perempuan | Tangerang | 2004-05-06 |        3 |         4 | Jl. Poltangan   |
+| 10 | 56438 | Vivian Xaviera   | Perempuan | Jakarta   | 2005-01-08 |        3 |         2 | Jl. Tulip       |
+| 11 | 25634 | Anantha Levania  | Perempuan | Depok     | 2002-09-07 |        2 |         2 | Jl. Peony       |
+| 12 | 17542 | Ryan Baskara     | Laki-Laki | Tangerang | 2000-01-10 |        2 |         3 | Jl. Garuda      |
+| 13 | 14721 | Ezra Shankara    | Laki-Laki | Bandung   | 2001-04-04 |        2 |         4 | Jl. Cendrawasih |
+| 14 | 28345 | Lyora Tamara     | Perempuan | Depok     | 2001-12-23 |        2 |         4 | Jl. Jalak 12    |
+| 15 | 63459 | Jessi Zamora     | Perempuan | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1      |
+| 16 | 20212 | Rafa Aksara      | Laki-Laki | Tangerang | 2003-10-21 |        1 |         2 | Jl. Canna       |
+| 17 | 11217 | Gracia Tifany    | Perempuan | Bandung   | 2002-04-19 |        1 |         3 | Jl. Ceri 2      |
+| 18 | 72231 | Starla Vanesya   | Perempuan | Jakarta   | 2001-05-25 |        1 |         2 | Jl. Ceria       |
+| 19 | 49573 | Areksa Radika    | Laki-Laki | Depok     | 2003-07-03 |        1 |         4 | Jl. Dahlia      |
+| 20 | 14149 | Vyora Aletta     | Perempuan | Jakarta   | 2000-08-01 |        1 |         3 | Jl. Aster 6     |
++----+-------+------------------+-----------+-----------+------------+----------+-----------+-----------------+
+20 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Arsya Azka', tmp_lahir = 'Purwokerto', alamat = 'Jl. Kenari'
+    -> WHERE nip = '45231';
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Raihan Wijaya', tmp_lahir = 'Surabaya', alamat = 'Jl. Indah 2'
+    -> WHERE nip = '35214';
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Fadlan Fadhila', tmp_lahir = 'Lamongan', alamat = 'Jl. Nangka'
+    -> WHERE nip = '75462';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Starla Vania', tmp_lahir = 'Bali', alamat = 'Jl. Bangka'
+    -> WHERE nip = '25634';
+Query OK, 1 row affected (0.016 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Ananta Levina', tmp_lahir = 'Padang', alamat = 'Jl. Swadaya 1'
+    -> WHERE nip = '72231';
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> DELETE FROM pegawai ORDER BY id DESC LIMIT 2;
+Query OK, 2 rows affected (0.004 sec)
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN berat_badan INT NOT NULL;
+Query OK, 0 rows affected (0.019 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 43
+    -> WHERE id = 1;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 44
+    -> WHERE id = 2;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 53
+    -> WHERE id = 3;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 54
+    -> WHERE id = 4;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 55
+    -> WHERE id = 5;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 60
+    -> WHERE id = 6;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 64
+    -> WHERE id = 7;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 65
+    -> WHERE id = 8;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 66
+    -> WHERE id = 9;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 68
+    -> WHERE id = 10;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 50
+    -> WHERE id = 11;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 48
+    -> WHERE id = 12;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 39
+    -> WHERE id = 13;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 40
+    -> WHERE id = 14;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 45
+    -> WHERE id = 15;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 47
+    -> WHERE id = 16;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 51
+    -> WHERE id = 17;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 46
+    -> WHERE id = 18;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 62
+    -> WHERE id = 19;
+Query OK, 0 rows affected (0.000 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = 52
+    -> WHERE id = 20;
+Query OK, 0 rows affected (0.002 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN umur INT NOT NULL;
+Query OK, 0 rows affected (0.014 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET umur = FLOOR(RAND() * 40) + 20;
+Query OK, 18 rows affected (0.008 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> CHANGE COLUMN gender jenis_kelamin VARCHAR(20);
+Query OK, 18 rows affected (0.090 sec)
+Records: 18  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT nip, nama, jenis_kelamin, alamat
+    -> FROM pegawai;
++-------+------------------+---------------+-----------------+
+| nip   | nama             | jenis_kelamin | alamat          |
++-------+------------------+---------------+-----------------+
+| 13245 | Sevina Citra     | Perempuan     | Jl. Langgar 42  |
+| 24531 | Rasya Pratama    | Laki-Laki     | Jl. Merpati     |
+| 12453 | Kyessy Agustin   | Perempuan     | Jl. Elang 3     |
+| 45231 | Arsya Azka       | Laki-Laki     | Jl. Kenari      |
+| 35214 | Raihan Wijaya    | Laki-Laki     | Jl. Indah 2     |
+| 68541 | Ryaufi Velis     | Perempuan     | Jl. Mawar 3     |
+| 75462 | Fadlan Fadhila   | Laki-Laki     | Jl. Nangka      |
+| 65421 | Rajash Bimantara | Laki-Laki     | Jl. Meruya      |
+| 42675 | Rea Rachel       | Perempuan     | Jl. Poltangan   |
+| 56438 | Vivian Xaviera   | Perempuan     | Jl. Tulip       |
+| 25634 | Starla Vania     | Perempuan     | Jl. Bangka      |
+| 17542 | Ryan Baskara     | Laki-Laki     | Jl. Garuda      |
+| 14721 | Ezra Shankara    | Laki-Laki     | Jl. Cendrawasih |
+| 28345 | Lyora Tamara     | Perempuan     | Jl. Jalak 12    |
+| 63459 | Jessi Zamora     | Perempuan     | Jl. Iris 1      |
+| 20212 | Rafa Aksara      | Laki-Laki     | Jl. Canna       |
+| 11217 | Gracia Tifany    | Perempuan     | Jl. Ceri 2      |
+| 72231 | Ananta Levina    | Perempuan     | Jl. Swadaya 1   |
++-------+------------------+---------------+-----------------+
+18 rows in set (0.008 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki';
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama             | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+|  2 | 24531 | Rasya Pratama    | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati     |          44 |   35 |
+|  4 | 45231 | Arsya Azka       | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari      |          54 |   47 |
+|  5 | 35214 | Raihan Wijaya    | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2     |          55 |   25 |
+|  7 | 75462 | Fadlan Fadhila   | Laki-Laki     | Lamongan   | 2002-02-02 |        3 |         1 | Jl. Nangka      |          64 |   50 |
+|  8 | 65421 | Rajash Bimantara | Laki-Laki     | Depok      | 2001-02-11 |        3 |         3 | Jl. Meruya      |          65 |   53 |
+| 12 | 17542 | Ryan Baskara     | Laki-Laki     | Tangerang  | 2000-01-10 |        2 |         3 | Jl. Garuda      |          48 |   58 |
+| 13 | 14721 | Ezra Shankara    | Laki-Laki     | Bandung    | 2001-04-04 |        2 |         4 | Jl. Cendrawasih |          39 |   49 |
+| 16 | 20212 | Rafa Aksara      | Laki-Laki     | Tangerang  | 2003-10-21 |        1 |         2 | Jl. Canna       |          47 |   33 |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+8 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi = 4 AND jenis_kelamin = 'Perempuan';
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 13245 | Sevina Citra   | Perempuan     | Jakarta   | 2005-04-16 |        4 |         1 | Jl. Langgar 42 |          43 |   49 |
+|  3 | 12453 | Kyessy Agustin | Perempuan     | Bandung   | 2002-12-09 |        4 |         1 | Jl. Elang 3    |          53 |   51 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+2 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE umur > 30 AND tmp_lahir = 'Jakarta';
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 13245 | Sevina Citra   | Perempuan     | Jakarta   | 2005-04-16 |        4 |         1 | Jl. Langgar 42 |          43 |   49 |
+| 10 | 56438 | Vivian Xaviera | Perempuan     | Jakarta   | 2005-01-08 |        3 |         2 | Jl. Tulip      |          68 |   36 |
+| 15 | 63459 | Jessi Zamora   | Perempuan     | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1     |          45 |   49 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+3 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi = 3 AND umur > 30 AND jenis_kelamin = 'Perempuan';
++----+-------+----------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat        | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+|  6 | 68541 | Ryaufi Velis   | Perempuan     | Bandung   | 2002-12-09 |        3 |         2 | Jl. Mawar 3   |          60 |   45 |
+|  9 | 42675 | Rea Rachel     | Perempuan     | Tangerang | 2004-05-06 |        3 |         4 | Jl. Poltangan |          66 |   59 |
+| 10 | 56438 | Vivian Xaviera | Perempuan     | Jakarta   | 2005-01-08 |        3 |         2 | Jl. Tulip     |          68 |   36 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+3 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT nip FROM pegawai;
++-------+
+| nip   |
++-------+
+| 11217 |
+| 12453 |
+| 13245 |
+| 14721 |
+| 17542 |
+| 20212 |
+| 24531 |
+| 25634 |
+| 28345 |
+| 35214 |
+| 42675 |
+| 45231 |
+| 56438 |
+| 63459 |
+| 65421 |
+| 68541 |
+| 72231 |
+| 75462 |
++-------+
+18 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan';
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 13245 | Sevina Citra   | Perempuan     | Jakarta   | 2005-04-16 |        4 |         1 | Jl. Langgar 42 |          43 |   49 |
+|  3 | 12453 | Kyessy Agustin | Perempuan     | Bandung   | 2002-12-09 |        4 |         1 | Jl. Elang 3    |          53 |   51 |
+|  6 | 68541 | Ryaufi Velis   | Perempuan     | Bandung   | 2002-12-09 |        3 |         2 | Jl. Mawar 3    |          60 |   45 |
+|  9 | 42675 | Rea Rachel     | Perempuan     | Tangerang | 2004-05-06 |        3 |         4 | Jl. Poltangan  |          66 |   59 |
+| 10 | 56438 | Vivian Xaviera | Perempuan     | Jakarta   | 2005-01-08 |        3 |         2 | Jl. Tulip      |          68 |   36 |
+| 11 | 25634 | Starla Vania   | Perempuan     | Bali      | 2002-09-07 |        2 |         2 | Jl. Bangka     |          50 |   21 |
+| 14 | 28345 | Lyora Tamara   | Perempuan     | Depok     | 2001-12-23 |        2 |         4 | Jl. Jalak 12   |          40 |   51 |
+| 15 | 63459 | Jessi Zamora   | Perempuan     | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1     |          45 |   49 |
+| 17 | 11217 | Gracia Tifany  | Perempuan     | Bandung   | 2002-04-19 |        1 |         3 | Jl. Ceri 2     |          51 |   37 |
+| 18 | 72231 | Ananta Levina  | Perempuan     | Padang    | 2001-05-25 |        1 |         2 | Jl. Swadaya 1  |          46 |   28 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+10 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nip IN (13245,14721,28345,63459,20212);
++----+-------+---------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama          | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 13245 | Sevina Citra  | Perempuan     | Jakarta   | 2005-04-16 |        4 |         1 | Jl. Langgar 42  |          43 |   49 |
+| 13 | 14721 | Ezra Shankara | Laki-Laki     | Bandung   | 2001-04-04 |        2 |         4 | Jl. Cendrawasih |          39 |   49 |
+| 14 | 28345 | Lyora Tamara  | Perempuan     | Depok     | 2001-12-23 |        2 |         4 | Jl. Jalak 12    |          40 |   51 |
+| 15 | 63459 | Jessi Zamora  | Perempuan     | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1      |          45 |   49 |
+| 16 | 20212 | Rafa Aksara   | Laki-Laki     | Tangerang | 2003-10-21 |        1 |         2 | Jl. Canna       |          47 |   33 |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+5 rows in set (0.003 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE tmp_lahir NOT IN ('Depok', 'Bandung');
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 13245 | Sevina Citra   | Perempuan     | Jakarta    | 2005-04-16 |        4 |         1 | Jl. Langgar 42 |          43 |   49 |
+|  2 | 24531 | Rasya Pratama  | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati    |          44 |   35 |
+|  4 | 45231 | Arsya Azka     | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari     |          54 |   47 |
+|  5 | 35214 | Raihan Wijaya  | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2    |          55 |   25 |
+|  7 | 75462 | Fadlan Fadhila | Laki-Laki     | Lamongan   | 2002-02-02 |        3 |         1 | Jl. Nangka     |          64 |   50 |
+|  9 | 42675 | Rea Rachel     | Perempuan     | Tangerang  | 2004-05-06 |        3 |         4 | Jl. Poltangan  |          66 |   59 |
+| 10 | 56438 | Vivian Xaviera | Perempuan     | Jakarta    | 2005-01-08 |        3 |         2 | Jl. Tulip      |          68 |   36 |
+| 11 | 25634 | Starla Vania   | Perempuan     | Bali       | 2002-09-07 |        2 |         2 | Jl. Bangka     |          50 |   21 |
+| 12 | 17542 | Ryan Baskara   | Laki-Laki     | Tangerang  | 2000-01-10 |        2 |         3 | Jl. Garuda     |          48 |   58 |
+| 15 | 63459 | Jessi Zamora   | Perempuan     | Jakarta    | 2002-06-18 |        2 |         1 | Jl. Iris 1     |          45 |   49 |
+| 16 | 20212 | Rafa Aksara    | Laki-Laki     | Tangerang  | 2003-10-21 |        1 |         2 | Jl. Canna      |          47 |   33 |
+| 18 | 72231 | Ananta Levina  | Perempuan     | Padang     | 2001-05-25 |        1 |         2 | Jl. Swadaya 1  |          46 |   28 |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+12 rows in set (0.003 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY nama ASC;
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama             | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| 18 | 72231 | Ananta Levina    | Perempuan     | Padang     | 2001-05-25 |        1 |         2 | Jl. Swadaya 1   |          46 |   28 |
+|  4 | 45231 | Arsya Azka       | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari      |          54 |   47 |
+| 13 | 14721 | Ezra Shankara    | Laki-Laki     | Bandung    | 2001-04-04 |        2 |         4 | Jl. Cendrawasih |          39 |   49 |
+|  7 | 75462 | Fadlan Fadhila   | Laki-Laki     | Lamongan   | 2002-02-02 |        3 |         1 | Jl. Nangka      |          64 |   50 |
+| 17 | 11217 | Gracia Tifany    | Perempuan     | Bandung    | 2002-04-19 |        1 |         3 | Jl. Ceri 2      |          51 |   37 |
+| 15 | 63459 | Jessi Zamora     | Perempuan     | Jakarta    | 2002-06-18 |        2 |         1 | Jl. Iris 1      |          45 |   49 |
+|  3 | 12453 | Kyessy Agustin   | Perempuan     | Bandung    | 2002-12-09 |        4 |         1 | Jl. Elang 3     |          53 |   51 |
+| 14 | 28345 | Lyora Tamara     | Perempuan     | Depok      | 2001-12-23 |        2 |         4 | Jl. Jalak 12    |          40 |   51 |
+| 16 | 20212 | Rafa Aksara      | Laki-Laki     | Tangerang  | 2003-10-21 |        1 |         2 | Jl. Canna       |          47 |   33 |
+|  5 | 35214 | Raihan Wijaya    | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2     |          55 |   25 |
+|  8 | 65421 | Rajash Bimantara | Laki-Laki     | Depok      | 2001-02-11 |        3 |         3 | Jl. Meruya      |          65 |   53 |
+|  2 | 24531 | Rasya Pratama    | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati     |          44 |   35 |
+|  9 | 42675 | Rea Rachel       | Perempuan     | Tangerang  | 2004-05-06 |        3 |         4 | Jl. Poltangan   |          66 |   59 |
+| 12 | 17542 | Ryan Baskara     | Laki-Laki     | Tangerang  | 2000-01-10 |        2 |         3 | Jl. Garuda      |          48 |   58 |
+|  6 | 68541 | Ryaufi Velis     | Perempuan     | Bandung    | 2002-12-09 |        3 |         2 | Jl. Mawar 3     |          60 |   45 |
+|  1 | 13245 | Sevina Citra     | Perempuan     | Jakarta    | 2005-04-16 |        4 |         1 | Jl. Langgar 42  |          43 |   49 |
+| 11 | 25634 | Starla Vania     | Perempuan     | Bali       | 2002-09-07 |        2 |         2 | Jl. Bangka      |          50 |   21 |
+| 10 | 56438 | Vivian Xaviera   | Perempuan     | Jakarta    | 2005-01-08 |        3 |         2 | Jl. Tulip       |          68 |   36 |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.002 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY berat_badan DESC;
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama             | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| 10 | 56438 | Vivian Xaviera   | Perempuan     | Jakarta    | 2005-01-08 |        3 |         2 | Jl. Tulip       |          68 |   36 |
+|  9 | 42675 | Rea Rachel       | Perempuan     | Tangerang  | 2004-05-06 |        3 |         4 | Jl. Poltangan   |          66 |   59 |
+|  8 | 65421 | Rajash Bimantara | Laki-Laki     | Depok      | 2001-02-11 |        3 |         3 | Jl. Meruya      |          65 |   53 |
+|  7 | 75462 | Fadlan Fadhila   | Laki-Laki     | Lamongan   | 2002-02-02 |        3 |         1 | Jl. Nangka      |          64 |   50 |
+|  6 | 68541 | Ryaufi Velis     | Perempuan     | Bandung    | 2002-12-09 |        3 |         2 | Jl. Mawar 3     |          60 |   45 |
+|  5 | 35214 | Raihan Wijaya    | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2     |          55 |   25 |
+|  4 | 45231 | Arsya Azka       | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari      |          54 |   47 |
+|  3 | 12453 | Kyessy Agustin   | Perempuan     | Bandung    | 2002-12-09 |        4 |         1 | Jl. Elang 3     |          53 |   51 |
+| 17 | 11217 | Gracia Tifany    | Perempuan     | Bandung    | 2002-04-19 |        1 |         3 | Jl. Ceri 2      |          51 |   37 |
+| 11 | 25634 | Starla Vania     | Perempuan     | Bali       | 2002-09-07 |        2 |         2 | Jl. Bangka      |          50 |   21 |
+| 12 | 17542 | Ryan Baskara     | Laki-Laki     | Tangerang  | 2000-01-10 |        2 |         3 | Jl. Garuda      |          48 |   58 |
+| 16 | 20212 | Rafa Aksara      | Laki-Laki     | Tangerang  | 2003-10-21 |        1 |         2 | Jl. Canna       |          47 |   33 |
+| 18 | 72231 | Ananta Levina    | Perempuan     | Padang     | 2001-05-25 |        1 |         2 | Jl. Swadaya 1   |          46 |   28 |
+| 15 | 63459 | Jessi Zamora     | Perempuan     | Jakarta    | 2002-06-18 |        2 |         1 | Jl. Iris 1      |          45 |   49 |
+|  2 | 24531 | Rasya Pratama    | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati     |          44 |   35 |
+|  1 | 13245 | Sevina Citra     | Perempuan     | Jakarta    | 2005-04-16 |        4 |         1 | Jl. Langgar 42  |          43 |   49 |
+| 14 | 28345 | Lyora Tamara     | Perempuan     | Depok      | 2001-12-23 |        2 |         4 | Jl. Jalak 12    |          40 |   51 |
+| 13 | 14721 | Ezra Shankara    | Laki-Laki     | Bandung    | 2001-04-04 |        2 |         4 | Jl. Cendrawasih |          39 |   49 |
++----+-------+------------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> LIMIT 5;
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+|  1 | 13245 | Sevina Citra   | Perempuan     | Jakarta    | 2005-04-16 |        4 |         1 | Jl. Langgar 42 |          43 |   49 |
+|  2 | 24531 | Rasya Pratama  | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati    |          44 |   35 |
+|  3 | 12453 | Kyessy Agustin | Perempuan     | Bandung    | 2002-12-09 |        4 |         1 | Jl. Elang 3    |          53 |   51 |
+|  4 | 45231 | Arsya Azka     | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari     |          54 |   47 |
+|  5 | 35214 | Raihan Wijaya  | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2    |          55 |   25 |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY id DESC
+    -> LIMIT 5;
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+| id | nip   | nama          | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat        | berat_badan | umur |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+| 18 | 72231 | Ananta Levina | Perempuan     | Padang    | 2001-05-25 |        1 |         2 | Jl. Swadaya 1 |          46 |   28 |
+| 17 | 11217 | Gracia Tifany | Perempuan     | Bandung   | 2002-04-19 |        1 |         3 | Jl. Ceri 2    |          51 |   37 |
+| 16 | 20212 | Rafa Aksara   | Laki-Laki     | Tangerang | 2003-10-21 |        1 |         2 | Jl. Canna     |          47 |   33 |
+| 15 | 63459 | Jessi Zamora  | Perempuan     | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1    |          45 |   49 |
+| 14 | 28345 | Lyora Tamara  | Perempuan     | Depok     | 2001-12-23 |        2 |         4 | Jl. Jalak 12  |          40 |   51 |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT nip, nama, umur
+    -> FROM pegawai
+    -> WHERE umur = ( SELECT MAX(umur) FROM pegawai);
++-------+------------+------+
+| nip   | nama       | umur |
++-------+------------+------+
+| 42675 | Rea Rachel |   59 |
++-------+------------+------+
+1 row in set (0.003 sec)
+
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+MariaDB [dbpegawai]> SELECT nip, nama, berat_badan FROM pegawai
+    -> WHERE berat_badan = ( SELECT MIN(berat_badan)
+    -> FROM pegawai);
++-------+---------------+-------------+
+| nip   | nama          | berat_badan |
++-------+---------------+-------------+
+| 14721 | Ezra Shankara |          39 |
++-------+---------------+-------------+
+1 row in set (0.065 sec)
+
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata2_umur
+    -> FROM pegawai;
++------------+
+| rata2_umur |
++------------+
+|    43.1111 |
++------------+
+1 row in set (0.005 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki' AND umur > 40 AND idjabatan = 2;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              0 |
++----------------+
+1 row in set (0.009 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan' AND umur < 40 AND idjabatan = 4;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              0 |
++----------------+
+1 row in set (0.000 sec)
+
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan
+    -> FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                       10 |
++--------------------------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT SUM(1) AS jumlah_pegawai
+    -> FROM pegawai
+    -> WHERE iddivisi = 1;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              3 |
++----------------+
+1 row in set (0.005 sec)
+
+MariaDB [dbpegawai]> SELECT iddivisi, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              3 |
+|        2 |              5 |
+|        3 |              5 |
+|        4 |              5 |
++----------+----------------+
+4 rows in set (0.003 sec)
+
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY jenis_kelamin
+    -> HAVING COUNT(*) >= 10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Perempuan     |             10 |
++---------------+----------------+
+1 row in set (0.006 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE 'Ananta%';
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+| id | nip   | nama          | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat        | berat_badan | umur |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+| 18 | 72231 | Ananta Levina | Perempuan     | Padang    | 2001-05-25 |        1 |         2 | Jl. Swadaya 1 |          46 |   28 |
++----+-------+---------------+---------------+-----------+------------+----------+-----------+---------------+-------------+------+
+1 row in set (0.002 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE '%Bimantara';
++----+-------+------------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip   | nama             | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+-------+------------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+|  8 | 65421 | Rajash Bimantara | Laki-Laki     | Depok     | 2001-02-11 |        3 |         3 | Jl. Meruya |          65 |   53 |
++----+-------+------------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE '%Zamora%';
++----+-------+--------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip   | nama         | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+-------+--------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| 15 | 63459 | Jessi Zamora | Perempuan     | Jakarta   | 2002-06-18 |        2 |         1 | Jl. Iris 1 |          45 |   49 |
++----+-------+--------------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE '____a%';
++----+-------+----------------+---------------+------------+------------+----------+-----------+--------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat       | berat_badan | umur |
++----+-------+----------------+---------------+------------+------------+----------+-----------+--------------+-------------+------+
+|  2 | 24531 | Rasya Pratama  | Laki-Laki     | Tangerang  | 2003-10-25 |        4 |         1 | Jl. Merpati  |          44 |   35 |
+|  4 | 45231 | Arsya Azka     | Laki-Laki     | Purwokerto | 2003-03-15 |        4 |         1 | Jl. Kenari   |          54 |   47 |
+|  5 | 35214 | Raihan Wijaya  | Laki-Laki     | Surabaya   | 2003-02-20 |        4 |         1 | Jl. Indah 2  |          55 |   25 |
+|  7 | 75462 | Fadlan Fadhila | Laki-Laki     | Lamongan   | 2002-02-02 |        3 |         1 | Jl. Nangka   |          64 |   50 |
+| 10 | 56438 | Vivian Xaviera | Perempuan     | Jakarta    | 2005-01-08 |        3 |         2 | Jl. Tulip    |          68 |   36 |
+| 14 | 28345 | Lyora Tamara   | Perempuan     | Depok      | 2001-12-23 |        2 |         4 | Jl. Jalak 12 |          40 |   51 |
++----+-------+----------------+---------------+------------+------------+----------+-----------+--------------+-------------+------+
+6 rows in set (0.002 sec)
+
+
+
+
